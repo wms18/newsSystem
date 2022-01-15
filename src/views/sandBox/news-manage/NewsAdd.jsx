@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { PageHeader, Steps, Button, Form, Input, Select, message } from "antd";
-import style from "./NewsAdd.module.css";
+import {
+  PageHeader,
+  Steps,
+  Button,
+  Form,
+  Input,
+  Select,
+  message,
+  notification,
+} from "antd";
+import styles from "./NewsAdd.module.css";
 import axios from "axios";
 import NewsEditor from "../../../components/news-manage/NewsEditor";
-const NewsAdd = () => {
+const NewsAdd = (props) => {
   const { Step } = Steps;
   const { Option } = Select;
   const [current, setCurrent] = useState(0);
@@ -11,6 +20,9 @@ const NewsAdd = () => {
   const [formInfo, setFormInfo] = useState();
   const [newsCont, setNewsCont] = useState();
   const newsForm = useRef(null);
+  const { username, region, roleId, id } = JSON.parse(
+    localStorage.getItem("token")
+  );
   useEffect(() => {
     axios.get("/categories").then((res) => {
       setCategories(res.data);
@@ -19,7 +31,7 @@ const NewsAdd = () => {
   const renderCategories = () => {
     return categories.map((item) => {
       return (
-        <Option key={item.id} value={item.value}>
+        <Option key={item.id} value={item.id}>
           {item.title}
         </Option>
       );
@@ -44,6 +56,37 @@ const NewsAdd = () => {
       }
     }
   };
+  //保存草稿箱
+  const handleSave = (auditState) => {
+    axios
+      .post("/news", {
+        ...formInfo,
+        content: newsCont,
+        region: region ? region : "全球",
+        author: username,
+        roleId: roleId,
+        auditState: auditState,
+        publishState: 0,
+        createTime: Date.now(),
+        star: 0,
+        view: 0,
+        // publishTime:0,
+      })
+      .then((res) => {
+        // console.log(res);
+        props.history.push(
+          auditState === 0 ? "/news-manage/draft" : "/audit-manage/list"
+        );
+        notification.info({
+          message: "通知",
+          description: `您可以到${
+            auditState === 0 ? "草稿箱" : "审核列表"
+          }中查看您的新闻`,
+          placement: "topRight",
+        });
+      });
+  };
+
   return (
     <div>
       <PageHeader className="site-page-header" title="撰写新闻" />
@@ -53,7 +96,7 @@ const NewsAdd = () => {
         <Step title="新闻提交" description="保存草稿或者提交审核" />
       </Steps>
       <div style={{ marginTop: "50px" }}>
-        <div className={current === 0 ? "" : style.active}>
+        <div className={current === 0 ? "" : styles.active}>
           <Form
             ref={newsForm}
             name="basic"
@@ -91,10 +134,10 @@ const NewsAdd = () => {
             </Form.Item>
           </Form>
         </div>
-        <div className={current === 1 ? "" : style.active}>
+        <div className={current === 1 ? "" : styles.active}>
           <NewsEditor
             handleMessage={(value) => {
-              console.log(value);
+              // console.log(value);
               setNewsCont(value);
             }}
           ></NewsEditor>
@@ -103,8 +146,14 @@ const NewsAdd = () => {
       <div style={{ marginTop: "50px" }}>
         {current === 2 && (
           <span>
-            <Button type="primary">保存草稿箱</Button>
-            <Button danger style={{ margin: "0 20px" }}>
+            <Button type="primary" onClick={() => handleSave(0)}>
+              保存草稿箱
+            </Button>
+            <Button
+              danger
+              style={{ margin: "0 20px" }}
+              onClick={() => handleSave(1)}
+            >
               提交审核
             </Button>
           </span>
