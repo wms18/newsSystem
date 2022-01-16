@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const AuditList = () => {
-    return (
-        <div>
-            
-        </div>
-    )
-}
+  return <div>AuditList</div>;
+};
 
-export default AuditList
+export default AuditList;

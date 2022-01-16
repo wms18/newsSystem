@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, message } from "antd";
+import { NavLink } from "react-router-dom";
+import { Table, Button, Modal, message, notification } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -7,13 +8,11 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
-const NewsDraft = () => {
+const NewsDraft = (props) => {
   const [data, setData] = useState([]);
   const { confirm } = Modal;
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [rightList, setRightList] = useState([]);
   const [current, setCurrent] = useState("");
-  const [currentId, setCurrentId] = useState(0);
   const [category, setCategory] = useState([]);
   const { username } = JSON.parse(localStorage.getItem("token"));
   const columns = [
@@ -27,6 +26,11 @@ const NewsDraft = () => {
       title: "新闻标题",
       dataIndex: "title",
       key: "title",
+      render: (title, item) => {
+        return (
+          <NavLink to={`/news-manage/preview/${item.id}`}>{title}</NavLink>
+        );
+      },
     },
     {
       title: "新闻标题",
@@ -53,8 +57,15 @@ const NewsDraft = () => {
             shape="circle"
             icon={<EditOutlined></EditOutlined>}
             style={{ margin: "0 10px" }}
+            onClick={() => {
+              props.history.push(`/news-manage/update/${item.id}`);
+            }}
           ></Button>
-          <Button type="primary" shape="circle">
+          <Button
+            type="primary"
+            shape="circle"
+            onClick={() => handleCheck(item.id)}
+          >
             <UploadOutlined />
           </Button>
         </div>
@@ -64,11 +75,26 @@ const NewsDraft = () => {
   useEffect(() => {
     axios.get("/categories").then((res) => {
       setCategory(res.data);
-    }, []);
+    });
     axios.get(`/news?author=${username}&auditState=0`).then((res) => {
       setData(res.data);
     });
   }, [username]);
+  const handleCheck = (id) => {
+    axios
+      .patch(`/news/${id}`, {
+        auditState: 1,
+      })
+      .then((res) => {
+        // console.log(res);
+        props.history.push("/audit-manage/list");
+        notification.info({
+          message: "通知",
+          description: `您可以到审核列表中查看您的新闻`,
+          placement: "topRight",
+        });
+      });
+  };
   const showConfirm = (item) => {
     confirm({
       title: "确定删除吗?",
@@ -91,15 +117,7 @@ const NewsDraft = () => {
   };
   const handleOk = () => {
     setIsModalVisible(false);
-    setData(
-      data.map((item) => {
-        if (item.id === currentId) {
-          return { ...item, rights: current };
-        }
-        return item;
-      })
-    );
-    axios.patch(`/roles/${currentId}`, { rights: current });
+    setData();
   };
 
   const handleCancel = () => {

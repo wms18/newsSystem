@@ -15,6 +15,9 @@ import Unpublished from "../../views/sandBox/publish-manage/Unpublished";
 import Published from "../../views/sandBox/publish-manage/Published";
 import Sunset from "../../views/sandBox/publish-manage/Sunset";
 import axios from "axios";
+import Preview from "../../views/sandBox/news-manage/Preview";
+import NewsUpdate from "../../views/sandBox/news-manage/NewsUpdate";
+
 const localRouter = {
   "/home": Home,
   "/user-manage/list": UserList,
@@ -28,14 +31,13 @@ const localRouter = {
   "/publish-manage/unpublished": Unpublished,
   "/publish-manage/published": Published,
   "/publish-manage/sunset": Sunset,
+  "/news-manage/preview/:id": Preview,
+  "/news-manage/update/:id": NewsUpdate,
 };
 const NewsRouter = () => {
   const [BackRouterList, setBackRouterList] = useState([]);
   useEffect(() => {
-    Promise.all([
-      axios.get( "/rights"),
-      axios.get( "/children"),
-    ])
+    Promise.all([axios.get("/rights"), axios.get("/children")])
       .then((res) => {
         setBackRouterList([...res[0].data, ...res[1].data]);
       })
@@ -47,7 +49,7 @@ const NewsRouter = () => {
     role: { rights },
   } = JSON.parse(localStorage.getItem("token"));
   const checkRoute = (item) => {
-    return localRouter[item.key] && item.pagepermisson;
+    return localRouter[item.key] && (item.pagepermisson || item.routepermisson);
   };
   const checkUserPermission = (item) => {
     return rights.includes(item.key);

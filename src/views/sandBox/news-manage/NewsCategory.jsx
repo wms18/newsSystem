@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const NewsCategory = () => {
-    return (
-        <div>
-            
-        </div>
-    )
-}
+  return <div>NewsCategory</div>;
+};
 
-export default NewsCategory
+export default NewsCategory;

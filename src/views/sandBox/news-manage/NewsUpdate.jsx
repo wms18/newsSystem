@@ -12,7 +12,7 @@ import {
 import styles from "./NewsAdd.module.css";
 import axios from "axios";
 import NewsEditor from "../../../components/news-manage/NewsEditor";
-const NewsAdd = (props) => {
+const NewsUpdate = (props) => {
   const { Step } = Steps;
   const { Option } = Select;
   const [current, setCurrent] = useState(0);
@@ -20,6 +20,7 @@ const NewsAdd = (props) => {
   const [formInfo, setFormInfo] = useState();
   const [newsCont, setNewsCont] = useState();
   const newsForm = useRef(null);
+  const newsId = props.match.params.id;
   const { username, region, roleId, id } = JSON.parse(
     localStorage.getItem("token")
   );
@@ -28,6 +29,16 @@ const NewsAdd = (props) => {
       setCategories(res.data);
     });
   }, []);
+  useEffect(() => {
+    Promise.all([
+      axios.get(`/news/${newsId}?_expand=role`),
+      axios.get("/categories"),
+    ]).then((res) => {
+      let { title, category, content } = res[0].data;
+      setNewsCont(content);
+      newsForm.current.setFieldsValue({ title, category });
+    });
+  }, [newsId]);
   const renderCategories = () => {
     return categories.map((item) => {
       return (
@@ -40,10 +51,10 @@ const NewsAdd = (props) => {
   /**
    * @name: 吴毛三
    * @test: test font
-   * @msg: 
+   * @msg:
    * @param {*}
    * @return {*}
-   */ 
+   */
   const handleNext = () => {
     if (current === 0) {
       newsForm.current
@@ -66,18 +77,11 @@ const NewsAdd = (props) => {
   //保存草稿箱
   const handleSave = (auditState) => {
     axios
-      .post("/news", {
+      .patch(`/news/${newsId}`, {
         ...formInfo,
         content: newsCont,
-        region: region ? region : "全球",
-        author: username,
-        roleId: roleId,
         auditState: auditState,
-        publishState: 0,
         createTime: Date.now(),
-        star: 0,
-        view: 0,
-        // publishTime:0,
       })
       .then((res) => {
         // console.log(res);
@@ -96,7 +100,11 @@ const NewsAdd = (props) => {
 
   return (
     <div>
-      <PageHeader className="site-page-header" title="撰写新闻" />
+      <PageHeader
+        className="site-page-header"
+        title="更新新闻"
+        onBack={() => props.history.goBack()}
+      />
       <Steps current={current}>
         <Step title="基本信息" description="新闻标题，新闻分类" />
         <Step title="新闻内容" description="新闻主体内容" />
@@ -147,6 +155,7 @@ const NewsAdd = (props) => {
               // console.log(value);
               setNewsCont(value);
             }}
+            content={newsCont}
           ></NewsEditor>
         </div>
       </div>
@@ -182,4 +191,4 @@ const NewsAdd = (props) => {
   );
 };
 
-export default NewsAdd;
+export default NewsUpdate;
