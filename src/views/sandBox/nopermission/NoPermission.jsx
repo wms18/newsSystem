@@ -2,22 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Calendar, Badge, Modal } from "antd";
 import moment from "moment";
 import axios from "axios";
+import "./index.scss";
 let timer;
 const NoPermission = () => {
   const [visible, setVisible] = useState(false);
   const [curDate, setCurDate] = useState(0);
   useEffect(() => {
     let date = new Date();
-    console.log(date.toLocaleDateString());
+    // console.log(date.toLocaleDateString());
     setCurDate(date.toLocaleDateString());
     renderTimer();
+    console.log(document.getElementsByClassName("ant-picker-content"));
     return () => {
       clearInterval(timer);
     };
   }, []);
   const renderTimer = () => {
-    axios.get( "/time").then((res) => {
-      console.log(res.data);
+    axios.get("/time").then((res) => {
+      // console.log(res.data);
       let num = res.data;
       if (num.length === 0) {
         return;
@@ -33,7 +35,6 @@ const NoPermission = () => {
       }, 1000);
     });
   };
-
   function getListData(value) {
     let listData;
     switch (value.date()) {
@@ -64,7 +65,6 @@ const NoPermission = () => {
     }
     return listData || [];
   }
-
   function dateCellRender(value) {
     const listData = getListData(value);
     return (
@@ -77,13 +77,11 @@ const NoPermission = () => {
       </ul>
     );
   }
-
   function getMonthData(value) {
     if (value.month() === 8) {
       return 1394;
     }
   }
-
   function monthCellRender(value) {
     const num = getMonthData(value);
     return num ? (
@@ -93,22 +91,23 @@ const NoPermission = () => {
       </div>
     ) : null;
   }
-
   const handleOk = (e) => {
     setVisible(false);
   };
-
   const handleCancel = (e) => {
     setVisible(false);
   };
   return (
     <div>
-      <Calendar
-        // value={curDate}
-        onSelect={() => setVisible(true)}
-        dateCellRender={dateCellRender}
-        monthCellRender={monthCellRender}
-      />
+      <div className="active">
+        <Calendar
+          // value={curDate}
+          onSelect={() => setVisible(true)}
+          dateCellRender={dateCellRender}
+          monthCellRender={monthCellRender}
+        />
+      </div>
+
       <Modal
         title="Basic Modal"
         visible={visible}

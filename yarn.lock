@@ -8181,7 +8181,7 @@
   "resolved" "https://registry.nlark.com/sanitize.css/download/sanitize.css-13.0.0.tgz"
   "version" "13.0.0"
 
-"sass-loader@^12.3.0":
+"sass-loader@^12.4.0":
   "integrity" "sha512-7xN+8khDIzym1oL9XyS6zP6Ges+Bo2B2xbPrjdMHEYyV3AQYhd/wXeru++3ODHF0zMjYmVadblSKrPrjEkL8mg=="
   "resolved" "https://registry.npmmirror.com/sass-loader/download/sass-loader-12.4.0.tgz"
   "version" "12.4.0"

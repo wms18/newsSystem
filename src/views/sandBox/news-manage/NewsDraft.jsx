@@ -123,9 +123,7 @@ const NewsDraft = (props) => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  const onCheck = (checkedKeys) => {
-    setCurrent(checkedKeys.checked);
-  };
+
   return (
     <div>
       <Table rowKey={(item) => item.id} dataSource={data} columns={columns} />
