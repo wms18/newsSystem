@@ -5,6 +5,7 @@ import { PageHeader, Descriptions } from "antd";
 const Preview = (props) => {
   const auditStateList = ["未审核", "审核中", "已通过", "未通过"];
   const publishStateList = ["未发布", "发布中", "已上线", "已下线"];
+  const colorList =['black','orange','green','red']
   const id = props.match.params.id;
   const [newsInfo, setNewsInfo] = useState();
   useEffect(() => {
@@ -44,12 +45,12 @@ const Preview = (props) => {
                 {newsInfo.region}
               </Descriptions.Item>
               <Descriptions.Item label="审核状态">
-                <span style={{ color: "red" }}>
+                <span style={{ color: colorList[newsInfo.auditState] }}>
                   {auditStateList[newsInfo.auditState]}
                 </span>
               </Descriptions.Item>
               <Descriptions.Item label="发布状态">
-                <span style={{ color: "red" }}>
+                <span style={{ color: colorList[newsInfo.publishState] }}>
                   {publishStateList[newsInfo.publishState]}
                 </span>
               </Descriptions.Item>
@@ -78,5 +79,4 @@ const Preview = (props) => {
     </>
   );
 };
-
 export default Preview;

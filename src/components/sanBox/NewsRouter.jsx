@@ -5,7 +5,7 @@ import RoleList from "../../views/sandBox/right-mange/RoleList";
 import RightList from "../../views/sandBox/right-mange/RightList";
 import Home from "../../views/sandBox/home/Home";
 import UserList from "../../views/sandBox/user-mange/UserList";
-import NoPermission from "../../views/sandBox/nopermission/NoPermission";
+import NoPermission from "../../views/sandBox/noperMission/NoPermission";
 import NewsAdd from "../../views/sandBox/news-manage/NewsAdd";
 import NewsDraft from "../../views/sandBox/news-manage/NewsDraft";
 import NewsCategory from "../../views/sandBox/news-manage/NewsCategory";
@@ -56,7 +56,7 @@ const NewsRouter = () => {
   };
   return (
     <Switch>
-      {BackRouterList.map((item) => {
+      {BackRouterList.length>0 && BackRouterList.map((item) => {
         if (checkRoute(item) && checkUserPermission(item))
           return (
             <Route
