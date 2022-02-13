@@ -4,7 +4,7 @@
  * @Author: 吴毛三
  * @Date: 2022-01-07 23:29:55
  * @LastEditors: 吴毛三
- * @LastEditTime: 2022-01-28 22:01:27
+ * @LastEditTime: 2022-01-28 23:13:46
  */
 import React, { useState, useEffect } from "react";
 import { Table, Button, Tag, Modal, Popover, Switch } from "antd";
@@ -68,7 +68,7 @@ const NewsCategory = () => {
   };
   return (
     <div>
-      <Table columns={columns} pagination={{ pageSize: 5 }} dataSource={data} />
+      <Table columns={columns} pagination={{ pageSize: 5 }} rowKey={(item)=>item.id} dataSource={data} />
     </div>
   );
 };

@@ -136,8 +136,11 @@
 // export default NoPermission;
 //41个字内不用加，每次多1个字190行加14
 import React from "react";
+import anime from "animejs/lib/anime.es.js";
 import { SoundOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import "./index.module.css";
+
 export default class NoPermission extends React.Component {
   constructor(props) {
     super(props);
@@ -172,6 +175,7 @@ export default class NoPermission extends React.Component {
         //   title: "这个是我的广告消息七这个是我的广告消息一",
         // },
       ],
+      count: 0,
     };
     this.ulValue = React.createRef(null);
     this.left = React.createRef(null);
@@ -181,12 +185,13 @@ export default class NoPermission extends React.Component {
     if (this.ulValue.current) {
       window.cancelAnimationFrame(this.myanimation);
       console.log(
-        window.getComputedStyle(this.left.current).width.replace("px", "")*1 +
-          2 +
-          "px"
+        parseInt(
+          window.getComputedStyle(this.ulValue.current).width.replace("px", "")
+        ) + "px"
       );
       this.ulValue.current.style.width =
-        window.getComputedStyle(this.left.current).width.replace("px", "") * 1 +
+        window.getComputedStyle(this.ulValue.current).width.replace("px", "") *
+          1 +
         "px";
       this.myanimation = window.requestAnimationFrame(this.animationAdvertise);
     }
@@ -195,21 +200,23 @@ export default class NoPermission extends React.Component {
     window.cancelAnimationFrame(this.myanimation);
     console.log(
       parseInt(
-        window.getComputedStyle(this.left.current).width.replace("px", "")
+        window.getComputedStyle(this.ulValue.current).width.replace("px", "")
       ) + "px"
     );
     this.ulValue.current.style.width =
-      window.getComputedStyle(this.left.current).width.replace("px", "")*1+140 + "px";
+      window.getComputedStyle(this.ulValue.current).width.replace("px", "") *
+        1 +
+      "px";
     this.myanimation = window.requestAnimationFrame(this.animationAdvertise);
   }
 
   animationAdvertise = (timetap) => {
     // console.log(timetap,'2134123131');
-    if (this.left.current) {
+    if (this.ulValue.current) {
       if (!this.time) this.time = timetap;
       const progress = timetap - this.time;
       const long = parseInt(
-        window.getComputedStyle(this.left.current).width.replace("px", "")
+        window.getComputedStyle(this.ulValue.current).width.replace("px", "")
       );
       const width = -Math.max(progress / 10, 0);
       // console.log(long);
@@ -217,7 +224,7 @@ export default class NoPermission extends React.Component {
         this.stopWidth = 0;
       }
       // console.log(this.stopWidth + width, long);
-      console.log(long);
+      // console.log(long);
       this.ulValue.current.style.marginLeft =
         this.stopWidth + width + 600 + "px";
       if (-(this.stopWidth + width) >= long + 600) {
@@ -259,6 +266,15 @@ export default class NoPermission extends React.Component {
           alignItems: "center",
         }}
       >
+        <Button
+          onClick={() =>
+            this.setState({ count: this.state.count + 1 }, () =>
+              window.cancelAnimationFrame(this.myanimation)
+            )
+          }
+        >
+          {this.state.count}
+        </Button>
         <span>
           <SoundOutlined />
         </span>

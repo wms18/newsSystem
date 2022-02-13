@@ -111,6 +111,7 @@ const AuditList = (props) => {
     axios
       .patch(`/news/${item.id}`, {
         'publishState': 2,
+        'publishTime':Date.now()
       })
       .then((res) => {
         // console.log(res);

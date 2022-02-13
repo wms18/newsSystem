@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version: X3版本
+ * @Author: 吴毛三
+ * @Date: 2021-12-25 01:19:07
+ * @LastEditors: 吴毛三
+ * @LastEditTime: 2022-02-12 23:02:41
+ */
 import React from "react";
 import { Layout } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -5,12 +13,9 @@ import { Menu, Dropdown, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 import { useState } from "react";
+import { connect } from "react-redux";
 const { Header } = Layout;
 const TopHeader = (props) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const toggle = () => {
-    setCollapsed(!collapsed);
-  };
   const {
     role: { roleName },
     username,
@@ -30,12 +35,18 @@ const TopHeader = (props) => {
       </Menu.Item>
     </Menu>
   );
+  // console.log(props);
+  const changeCollapsed = () => {
+    console.log(props);
+    props.changeCollapsed();
+  };
   return (
     <Header className="site-layout-background" style={{ padding: "0 16px" }}>
-      {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-        className: "trigger",
-        onClick: toggle,
-      })}
+      {props.isCollApsed ? (
+        <MenuUnfoldOutlined onClick={changeCollapsed}></MenuUnfoldOutlined>
+      ) : (
+        <MenuFoldOutlined onClick={changeCollapsed}></MenuFoldOutlined>
+      )}
       <div style={{ float: "right" }}>
         <span>
           欢迎 <span style={{ color: "#1890ff" }}>{username}</span>回来
@@ -47,5 +58,21 @@ const TopHeader = (props) => {
     </Header>
   );
 };
-
-export default withRouter(TopHeader);
+/* 
+  connect (
+    mapStateProps,
+    mapDispatchToProps
+  )(被包装的组件)
+ */
+const mapStateToProps = ({ CollApsedReducer: { isCollApsed } }) => {
+  return { isCollApsed };
+};
+const mapDispatchToProps = {
+  changeCollapsed() {
+    return { type: "change_collapsed" };
+  },
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(TopHeader));
