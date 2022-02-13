@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import { UserOutlined, UploadOutlined } from "@ant-design/icons";
+import { connect } from "react-redux";
 import axios from "axios";
 import "./index.css";
 const { Sider } = Layout;
@@ -87,9 +88,11 @@ const SideMenu = (props) => {
   };
 
   return (
-    <Sider trigger={null} collapsible>
+    <Sider trigger={null} collapsible collapsed={props.isCollApsed}>
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-        <div className="logo">全球新闻发布管理系统</div>
+        <div className="logo">
+          {props.isCollApsed ? null : <span>全球新闻发布管理系统</span>}
+        </div>
         <div style={{ flex: 1, overflow: "auto" }}>
           <Menu
             theme="dark"
@@ -104,5 +107,7 @@ const SideMenu = (props) => {
     </Sider>
   );
 };
-
-export default withRouter(SideMenu);
+const mapStateToProps = ({ CollApsedReducer: { isCollApsed } }) => ({
+  isCollApsed,
+});
+export default connect(mapStateToProps)(withRouter(SideMenu));

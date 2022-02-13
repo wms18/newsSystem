@@ -4,7 +4,7 @@
  * @Author: 吴毛三
  * @Date: 2021-12-25 01:19:07
  * @LastEditors: 吴毛三
- * @LastEditTime: 2022-02-12 23:02:41
+ * @LastEditTime: 2022-02-13 23:14:18
  */
 import React from "react";
 import { Layout } from "antd";
@@ -12,7 +12,6 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { Menu, Dropdown, Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
-import { useState } from "react";
 import { connect } from "react-redux";
 const { Header } = Layout;
 const TopHeader = (props) => {
@@ -37,7 +36,6 @@ const TopHeader = (props) => {
   );
   // console.log(props);
   const changeCollapsed = () => {
-    console.log(props);
     props.changeCollapsed();
   };
   return (
@@ -64,7 +62,7 @@ const TopHeader = (props) => {
     mapDispatchToProps
   )(被包装的组件)
  */
-const mapStateToProps = ({ CollApsedReducer: { isCollApsed } }) => {
+const mapStateProps = ({ CollApsedReducer: { isCollApsed } }) => {
   return { isCollApsed };
 };
 const mapDispatchToProps = {
@@ -73,6 +71,6 @@ const mapDispatchToProps = {
   },
 };
 export default connect(
-  mapStateToProps,
+  mapStateProps,
   mapDispatchToProps
 )(withRouter(TopHeader));
