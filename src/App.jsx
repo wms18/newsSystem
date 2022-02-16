@@ -4,7 +4,7 @@
  * @Author: 吴毛三
  * @Date: 2022-01-16 00:15:20
  * @LastEditors: 吴毛三
- * @LastEditTime: 2022-01-30 22:10:25
+ * @LastEditTime: 2022-02-16 21:28:49
  */
 import IndexRouter from "./router/IndexRouter";
 import { ConfigProvider } from "antd";
@@ -14,7 +14,8 @@ import $ from "jquery";
 import moment from "moment";
 import "moment/locale/zh-cn";
 import { Chat } from "./util/chat";
-import store from "./redux/store";
+import { store, persistor } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 moment.locale("zh-cn");
 
 function App() {
@@ -26,11 +27,13 @@ function App() {
   //   ws_url: "http://localhost:5000",
   // });
   // window.newPublic = newPublic;
-  
+
   return (
     <ConfigProvider locale={zh_CN}>
       <Provider store={store}>
-        <IndexRouter />
+        <PersistGate loading={null} persistor={persistor}>
+          <IndexRouter />
+        </PersistGate>
       </Provider>
     </ConfigProvider>
   );

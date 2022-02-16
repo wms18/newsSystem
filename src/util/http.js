@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from "../redux/store";
+import {store} from "../redux/store";
 axios.defaults.baseURL = "http://localhost:5000";
 // 添加请求拦截器
 axios.interceptors.request.use(
@@ -17,12 +17,12 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     // 对响应数据做点什么
-    store.dispatch({ type: "change_loading", payload: true });
+    store.dispatch({ type: "change_loading", payload: false });
     return response;
   },
   function (error) {
     // 对响应错误做点什么
-    store.dispatch({ type: "change_loading", payload: true });
+    store.dispatch({ type: "change_loading", payload: false });
     return Promise.reject(error);
   }
 );
