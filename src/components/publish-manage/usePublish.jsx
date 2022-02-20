@@ -7,7 +7,7 @@
  * @LastEditTime: 2022-01-30 01:51:07
  */
 import { useEffect, useState } from "react";
-import {notification} from 'antd'
+import { notification } from "antd";
 import axios from "axios";
 function usePublish(type) {
   const { username } = JSON.parse(localStorage.getItem("token"));

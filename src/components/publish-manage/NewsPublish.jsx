@@ -4,7 +4,7 @@
  * @Author: 吴毛三
  * @Date: 2022-01-28 23:20:45
  * @LastEditors: 吴毛三
- * @LastEditTime: 2022-01-30 02:10:29
+ * @LastEditTime: 2022-02-20 23:07:34
  */
 import React, { useState, useEffect } from "react";
 import { Table, Button, Tag, Modal, Popover, Switch } from "antd";
@@ -29,7 +29,7 @@ const NewsPublish = (props) => {
     },
     {
       title: "新闻分类",
-      dataIndex: type === 1 ? "category" : "categoryId",
+      dataIndex: props.data.category ? "category" : "categoryId",
       render: (key, item) => {
         return <Tag color={"orange"}>{item.categories[key - 1]?.value}</Tag>;
       },
