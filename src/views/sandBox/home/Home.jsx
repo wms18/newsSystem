@@ -4,10 +4,10 @@
  * @Author: 吴毛三
  * @Date: 2021-12-25 01:29:58
  * @LastEditors: 吴毛三
- * @LastEditTime: 2022-02-20 23:31:13
+ * @LastEditTime: 2022-02-21 22:24:14
  */
 import React, { useEffect, useState, useRef } from "react";
-import { Card, Col, Row, List, Avatar } from "antd";
+import { Card, Col, Row, List, Avatar, Drawer } from "antd";
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -22,7 +22,11 @@ const { Meta } = Card;
 const Home = (props) => {
   const [viewList, setViewList] = useState([]);
   const [starList, setStarList] = useState([]);
+  const [allList, setAllList] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [pieChart, setPieChart] = useState(null);
   const barRef = useRef();
+  const pieRef = useRef();
   useEffect(() => {
     axios
       .get(
@@ -42,6 +46,7 @@ const Home = (props) => {
   useEffect(() => {
     axios.get("/news?publishState=2&_expand=category").then((res) => {
       renderBarView(_.groupBy(res.data, (item) => item.category.title));
+      setAllList(res.data);
     });
     return () => {
       window.onresize = null;
@@ -78,12 +83,58 @@ const Home = (props) => {
         },
       ],
     };
-
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
     window.onresize = () => {
       myChart.resize();
     };
+  };
+  const renderPieView = (obj) => {
+    const currentList = allList.filter((item) => item.author === username);
+    const groupObj = _.groupBy(currentList, (item) => item.category.title);
+    let list = [];
+    for (const i in groupObj) {
+      list.push({ name: i, value: groupObj[i].length });
+    }
+    var myChart;
+    if (!pieChart) {
+      myChart = echarts.init(pieRef.current);
+      setPieChart(myChart);
+    } else {
+      myChart = pieChart;
+    }
+    var option;
+
+    option = {
+      title: {
+        text: "当前用户新闻分类图示",
+        left: "center",
+      },
+      tooltip: {
+        trigger: "item",
+      },
+      legend: {
+        orient: "vertical",
+        left: "left",
+      },
+      series: [
+        {
+          name: "发布数量",
+          type: "pie",
+          radius: "50%",
+          data: list,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+        },
+      ],
+    };
+
+    option && myChart.setOption(option);
   };
   const {
     username,
@@ -132,7 +183,15 @@ const Home = (props) => {
               />
             }
             actions={[
-              <SettingOutlined key="setting" />,
+              <SettingOutlined
+                key="setting"
+                onClick={() => {
+                  setTimeout(() => {
+                    setVisible(true);
+                    renderPieView();
+                  }, 0);
+                }}
+              />,
               <EditOutlined key="edit" />,
               <EllipsisOutlined key="ellipsis" />,
             ]}
@@ -154,6 +213,18 @@ const Home = (props) => {
         ref={barRef}
         style={{ height: "400px", width: "100%", marginTop: "30px" }}
       ></div>
+      <Drawer
+        width={"500px"}
+        title="个人新闻分类"
+        placement="right"
+        onClose={() => setVisible(false)}
+        visible={visible}
+      >
+        <div
+          ref={pieRef}
+          style={{ height: "400px", width: "100%", marginTop: "30px" }}
+        ></div>
+      </Drawer>
     </div>
   );
 };
