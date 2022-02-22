@@ -4,7 +4,7 @@
  * @Author: 吴毛三
  * @Date: 2021-12-25 01:29:58
  * @LastEditors: 吴毛三
- * @LastEditTime: 2022-02-21 22:24:14
+ * @LastEditTime: 2022-02-22 22:02:46
  */
 import React, { useEffect, useState, useRef } from "react";
 import { Card, Col, Row, List, Avatar, Drawer } from "antd";
@@ -89,7 +89,7 @@ const Home = (props) => {
       myChart.resize();
     };
   };
-  const renderPieView = (obj) => {
+  const renderPieView = () => {
     const currentList = allList.filter((item) => item.author === username);
     const groupObj = _.groupBy(currentList, (item) => item.category.title);
     let list = [];
@@ -104,7 +104,6 @@ const Home = (props) => {
       myChart = pieChart;
     }
     var option;
-
     option = {
       title: {
         text: "当前用户新闻分类图示",
@@ -112,6 +111,7 @@ const Home = (props) => {
       },
       tooltip: {
         trigger: "item",
+        formatter: "{a} <br/>{b} : {c}({d}%) ",
       },
       legend: {
         orient: "vertical",
@@ -128,6 +128,15 @@ const Home = (props) => {
               shadowBlur: 10,
               shadowOffsetX: 0,
               shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+          itemStyle: {
+            normal: {
+              label: {
+                show: true,
+                formatter: "{b}:{c}({d}%)",
+              },
+              labelLine: { show: true },
             },
           },
         },
@@ -214,7 +223,7 @@ const Home = (props) => {
         style={{ height: "400px", width: "100%", marginTop: "30px" }}
       ></div>
       <Drawer
-        width={"500px"}
+        width={"600px"}
         title="个人新闻分类"
         placement="right"
         onClose={() => setVisible(false)}
