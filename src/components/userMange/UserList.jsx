@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useEffect } from "react";
-import { Select, Form, Input } from "antd";
+import { Select, Form, Input, Row, Col } from "antd";
 const UserForm = (props, ref) => {
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -70,76 +70,99 @@ const UserForm = (props, ref) => {
   };
   //   form.setFieldsValue(userInfo);
   return (
-    <Form form={form} layout="vertical" ref={ref}>
-      <Form.Item
-        name="username"
-        hasFeedback
-        label="用户名"
-        rules={[
-          {
-            required: true,
-            message: "请输入用户名",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="password"
-        hasFeedback
-        label="密码"
-        rules={[
-          {
-            required: true,
-            message: "请输入密码",
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="region"
-        label="区域"
-        rules={
-          isDisabled
-            ? []
-            : [
-                {
-                  required: true,
-                  message: "请选择",
-                },
-              ]
-        }
-      >
-        <Select placeholder="请选择" disabled={isDisabled}>
-          {renderRegionList()}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="roleId"
-        label="角色"
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: "请选择",
-          },
-        ]}
-      >
-        <Select
-          onChange={(item) => {
-            if (item === 1) {
-              ref.current.setFieldsValue({ region: "" });
-              setIsDisabled(true);
-            } else {
-              setIsDisabled(false);
+    <Form
+      form={form}
+      layout="horizontal"
+      // labelCol={{
+      //   span: 4,
+      // }}
+      // wrapperCol={{
+      //   span: 20,
+      // }}
+      ref={ref}
+    >
+      <Row>
+        <Col span={12}>
+          <Form.Item
+            name="username"
+            hasFeedback
+            label="用户名"
+            rules={[
+              {
+                required: true,
+                message: "请输入用户名",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Col>
+        <Col span={11} offset={1}>
+          <Form.Item
+            name="password"
+            hasFeedback
+            label="密码"
+            rules={[
+              {
+                required: true,
+                message: "请输入密码",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12 }>
+          <Form.Item
+          wrapperCol={{offset:1 }}
+            name="region"
+            label="区域"
+            rules={
+              isDisabled
+                ? []
+                : [
+                    {
+                      required: true,
+                      message: "请选择",
+                    },
+                  ]
             }
-          }}
-          placeholder="请选择"
-        >
-          {renderRoleList()}
-        </Select>
-      </Form.Item>
+          >
+            <Select placeholder="请选择" disabled={isDisabled}>
+              {renderRegionList()}
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={11} offset={1}>
+          <Form.Item
+            name="roleId"
+            label="角色"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "请选择",
+              },
+            ]}
+          >
+            <Select
+              onChange={(item) => {
+                if (item === 1) {
+                  ref.current.setFieldsValue({ region: "" });
+                  setIsDisabled(true);
+                } else {
+                  setIsDisabled(false);
+                }
+              }}
+              placeholder="请选择"
+            >
+              {renderRoleList()}
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
     </Form>
   );
 };
